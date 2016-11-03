@@ -115,6 +115,29 @@ function mostFollowers(age){
 
 }
 
+//determines if everyone who the id follows has followed them back
+function isFollowedBack(id){
+  var followers = getFollowers(id, 0);
+  var follows = getFollows(id, 0);
+
+  for (var f in follows){
+    if (followers.indexOf(f) == -1) return false;
+  }
+
+  return true;
+}
+
+//List everyone who follows someone who hasn't followed them back
+function listLeftHanging(){
+  var list = [];
+  for ( var i in data){
+    if (!isFollowedBack(i)) list.push(data[i].name);
+  }
+
+  return list;
+
+}
+
 // --------------------------------------------------------------------------------------
 // console.log(getNameFromId("f01"));
 console.log(listEveryone());
@@ -123,5 +146,7 @@ console.log( mostFollows(30).toString() , "follow(s) the most people over 30.");
 
 console.log("\n", mostFollowers(0).toString() , "have the most followers.");
 console.log( mostFollowers(30).toString() , "have the most followers over 30.");
+
+console.log( "Poor sods in the friendzone:", listLeftHanging().toString());
 
 // console.log(isOverAge("f04", 0));
