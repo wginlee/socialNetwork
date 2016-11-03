@@ -67,8 +67,24 @@ function getFollowers(id, age){
   return list;
 }
 
+//given a name, return a list of their followers
+function getFollowersByName(name){
+  var list = [];
+
+  for (var f in data){ //for everyone in data
+
+    var nameFollows = [];
+    for (var n of data[f].follows){ //loop the follows list
+       if (name == getNameFromId(n)){ //convert id into names and compare with our input name
+        list.push(data[f].name); //if there is a match, throw this stalker's name into our list
+       }
+    }
+
+  }
 
 
+  return list;
+}
 
 //determines if the person associated with the given id is over a specified age (true or false)
 function isOverAge(id, age){
@@ -138,15 +154,71 @@ function listLeftHanging(){
 
 }
 
+//sum of # of followers and # of followers of followers
+function getReach(id){
+  var followersArray = getFollowers(id, 0);
+  var reachSet = new Set();
+
+  console.log("followersArray", followersArray);
+  for (var fName of followersArray){
+    let followerFollowers = getFollowersByName(fName);
+    console.log(getNameFromId(id) + "\'s follower " + fName + " has the followers "  + followerFollowers);
+
+    for ( var ffName of followerFollowers){
+        reachSet.add(ffName);
+    }
+
+  }
+
+  reachSet.delete(getNameFromId(id)); //remove the person whose reach we are searching for in the first place
+  console.log(reachSet);
+  return reachSet.size;
+}
+
+//list everyone's reaches
+function listReach(){
+  var list = "";
+  for (var i in data){
+    list += data[i].name + "\'s reach is " + getReach(i) + "\n";
+  }
+  return list;
+}
+
 // --------------------------------------------------------------------------------------
 // console.log(getNameFromId("f01"));
-console.log(listEveryone());
-console.log( mostFollows(0).toString() , "follow(s) the most people.");
-console.log( mostFollows(30).toString() , "follow(s) the most people over 30.");
+// console.log(listEveryone());
+// console.log( mostFollows(0).toString() , "follow(s) the most people.");
+// console.log( mostFollows(30).toString() , "follow(s) the most people over 30.");
 
-console.log("\n", mostFollowers(0).toString() , "have the most followers.");
-console.log( mostFollowers(30).toString() , "have the most followers over 30.");
+// console.log("\n", mostFollowers(0).toString() , "have the most followers.");
+// console.log( mostFollowers(30).toString() , "have the most followers over 30.");
 
-console.log( "Poor sods in the friendzone:", listLeftHanging().toString());
+// console.log( "\nPoor sods in the friendzone:", listLeftHanging().toString());
 
+// var test = "f03";
+
+// console.log(getFollowers(test, 0) , getFollowersByName("Charlie"));
+
+
+// console.log( getNameFromId(test) , " reach is ", getReach(test) );
+
+// var test1 = "f01";
+// console.log(getFollowers(test1, 0) , getFollowersByName("Alice"));
+
+// var test2 = "f02";
+// console.log( getNameFromId(test2) , " reach is ", getReach(test2));
+
+// var test3 = "f03";
+// console.log( getNameFromId(test3) , " reach is ", getReach(test3));
+
+// var test4 = "f04";
+// console.log( getNameFromId(test4) , " reach is ", getReach(test4));
+
+// var test5 = "f05";
+// console.log( getNameFromId(test5) , " reach is ", getReach(test5));
+
+// var test6 = "f06";
+// console.log( getNameFromId(test6) , " reach is ", getReach(test6));
 // console.log(isOverAge("f04", 0));
+
+console.log(listReach());
